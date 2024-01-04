@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+</head>
+<body>
+
+<h1>Product List</h1>
+
+<!-- 테이블을 생성하여 상품 목록을 표시합니다. -->
+<table border="1">
+  <thead>
+    <tr>
+      <!-- 테이블 헤더를 정의합니다. -->
+      <th>Number</th>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody id="productList">
+    <!-- 서버에서 가져온 데이터로 행을 동적으로 채울 공간입니다. -->
+  </tbody>
+</table>
+
+<script>
+  // 서버로부터 데이터를 가져오기 위해 AJAX(fetch API)를 사용합니다.
+  fetch('/mariaDB')
+    .then(response => response.json()) // JSON 형식의 응답을 파싱합니다.
+    .then(data => {
+      // 상품 목록 테이블의 tbody 요소를 가져옵니다.
+      const productList = document.getElementById('productList');
+      
+      // 서버에서 가져온 상품 데이터를 순회하며 테이블 행을 생성합니다.
+      data.forEach(product => {
+        // 각 상품에 대한 행을 HTML 문자열로 생성합니다.
+        const row = `
+          <tr>
+            <td>${product.number}</td>  <!-- 상품 번호 -->
+            <td>${product.name}</td>    <!-- 상품 이름 -->
+            <td>${product.price}</td>   <!-- 상품 가격 -->
+          </tr>
+        `;
+        // 생성된 행을 상품 목록 테이블에 추가합니다.
+        productList.innerHTML += row;
+      });
+    })
+    // 데이터 가져오기 중에 오류가 발생하면 오류 메시지를 콘솔에 출력합니다.
+    .catch(error => console.error('Error fetching data:', error));
+</script>
+
+</body>
+</html>
